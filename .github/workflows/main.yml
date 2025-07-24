@@ -65,7 +65,7 @@ jobs:
             --access-token "${GITHUB_TOKEN}" \
             --aqua-key "${{ secrets.AQUA_KEY }}" \
             --aqua-secret "${{ secrets.AQUA_SECRET }}" \
-            --cspm-url https://stage.api.cloudsploit.com \ 
+            --cspm-url https://stage.api.cloudsploit.com \
             --artifact-path target/*.jar \
             --log-file billy.log \
             --sbom-path sbom.json
