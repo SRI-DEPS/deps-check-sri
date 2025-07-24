@@ -81,7 +81,7 @@ jobs:
             --artifact-path target/*.jar \
             --log-file billy.log \
             --sbom-path sbom.json \
-            --repository "https://github.com/${{ github.repository }}" \
+            --repository "https://github.com/SRI-DEPS/deps-check-sri" \
             --commit "${{ github.sha }}" \
             --branch "${{ github.ref_name }}" \
             --build-id "${{ github.run_id }}"
