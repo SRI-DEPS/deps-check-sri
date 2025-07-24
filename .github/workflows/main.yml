@@ -61,7 +61,6 @@ jobs:
           BILLY_SERVER: https://billy.codesec.aquasec.com
         run: |
           ./billy generate \
-            --access-token "${{ secrets.TOKEN_GITHUB }}" \
             --aqua-key "${{ secrets.AQUA_KEY }}" \
             --aqua-secret "${{ secrets.AQUA_SECRET }}" \
             --cspm-url "https://stage.api.cloudsploit.com" \
