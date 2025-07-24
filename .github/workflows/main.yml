@@ -49,7 +49,7 @@ jobs:
 
       - name: Generate SBOM and Upload to Aqua
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
           AQUA_KEY: ${{ secrets.AQUA_KEY }}
           AQUA_SECRET: ${{ secrets.AQUA_SECRET }}
           TRIVY_USERNAME: ${{ secrets.TRIVY_USERNAME }}
@@ -62,7 +62,7 @@ jobs:
           BILLY_SERVER: https://billy.codesec.aquasec.com
         run: |
           ./billy generate \
-            --access-token "${TOKEN_GITHUB}" \
+            --access-token "${{ secrets.TOKEN_GITHUB }" \
             --aqua-key "${{ secrets.AQUA_KEY }}" \
             --aqua-secret "${{ secrets.AQUA_SECRET }}" \
             --cspm-url https://stage.api.cloudsploit.com \
