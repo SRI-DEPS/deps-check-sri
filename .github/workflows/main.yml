@@ -57,7 +57,7 @@ jobs:
           TRIVY_CHECKS_BUNDLE_REPOSITORY: "registry.aquasec.com/trivy-checks:1"
           AQUA_URL: https://api.dev.supply-chain.cloud.aquasec.com
           CSPM_URL: https://stage.api.cloudsploit.com
-          BILLY_SERVER: https://billy.codesec.aquasec.com
+          BILLY_SERVER: https://billy.dev-aqua.codesec.aquasec.com
         run: |
           ./billy generate \
             --access-token "${{ secrets.GITHUB_TOKEN }}"
