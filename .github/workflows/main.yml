@@ -18,7 +18,20 @@ jobs:
           java-version: '21'
 
       - name: Build Maven project
-        run: mvn clean package
+        run: mvn clean package --batch-mode --no-transfer-progress
+
+      - name: Debug target directory contents
+        run: ls -la target
+
+      - name: Validate JAR file exists
+        run: |
+          JAR_COUNT=$(ls target/*.jar 2>/dev/null | wc -l)
+          if [ "$JAR_COUNT" -eq 0 ]; then
+            echo "❌ No JAR file found in target/. Failing build."
+            exit 1
+          else
+            echo "✅ Found $(ls target/*.jar)"
+          fi
 
       - name: Run Trivy FS scan for Aqua
         uses: docker://aquasec/aqua-scanner
@@ -45,6 +58,7 @@ jobs:
           chmod +x install.sh
           BINDIR="." sh install.sh
           rm install.sh
+
       - name: Generate SBOM and Upload to Aqua
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -60,13 +74,14 @@ jobs:
           BILLY_SERVER: https://billy.dev-aqua.codesec.aquasec.com
         run: |
           ./billy generate \
-            --access-token "${{ secrets.GITHUB_TOKEN }}"
+            --access-token "${{ secrets.GITHUB_TOKEN }}" \
             --aqua-key "${{ secrets.AQUA_KEY }}" \
             --aqua-secret "${{ secrets.AQUA_SECRET }}" \
             --cspm-url "https://stage.api.cloudsploit.com" \
             --artifact-path target/*.jar \
             --log-file billy.log \
             --sbom-path sbom.json
+
       - name: Print Billy Log Output
         if: always()
         run: |
