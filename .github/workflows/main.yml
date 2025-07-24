@@ -1,0 +1,79 @@
+name: Build & Upload SBOM to Aqua
+
+on: [push, pull_request]
+
+jobs:
+  build-and-upload:
+    name: Build & Aqua SBOM Upload
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Build Maven project
+        run: mvn clean package
+
+      - name: Run Trivy FS scan for Aqua
+        uses: docker://aquasec/aqua-scanner
+        with:
+          args: trivy fs target/ \
+            --scanners config,vuln,secret \
+            --db-repository=registry.aquasec.com/trivy-db:2 \
+            --checks-bundle-repository=registry.aquasec.com/trivy-checks:1 \
+            --debug \
+            --java-db-repository=registry.aquasec.com/trivy-java-db:1
+        env:
+          TRIVY_USERNAME: ${{ secrets.TRIVY_USERNAME }}
+          TRIVY_PASSWORD: ${{ secrets.TRIVY_PASSWORD }}
+          AQUA_KEY: ${{ secrets.AQUA_KEY }}
+          AQUA_SECRET: ${{ secrets.AQUA_SECRET }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AQUA_URL: https://api.dev.supply-chain.cloud.aquasec.com
+          CSPM_URL: https://stage.api.cloudsploit.com
+    #      AQUA_URL: https://api.supply-chain.cloud.aquasec.com
+     #     CSPM_URL: https://api.cloudsploit.com
+          TRIVY_RUN_AS_PLUGIN: 'aqua'
+
+      - name: Install Billy CLI
+        run: |
+          curl -sLo install.sh https://download.codesec.aquasec.com/billy/install.sh
+          chmod +x install.sh
+          BINDIR="." sh install.sh
+
+      - name: Generate SBOM and Upload to Aqua
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AQUA_KEY: ${{ secrets.AQUA_KEY }}
+          AQUA_SECRET: ${{ secrets.AQUA_SECRET }}
+          TRIVY_USERNAME: ${{ secrets.TRIVY_USERNAME }}
+          TRIVY_PASSWORD: ${{ secrets.TRIVY_PASSWORD }}
+          TRIVY_DB_REPOSITORY: "registry.aquasec.com/trivy-db:2"
+          TRIVY_JAVA_DB_REPOSITORY: "registry.aquasec.com/trivy-java-db:1"
+          TRIVY_CHECKS_BUNDLE_REPOSITORY: "registry.aquasec.com/trivy-checks:1"
+          AQUA_URL: https://api.dev.supply-chain.cloud.aquasec.com
+          CSPM_URL: https://stage.api.cloudsploit.com
+          BILLY_SERVER: https://billy.codesec.aquasec.com
+        run: |
+          ./billy generate \
+            --access-token "${GITHUB_TOKEN}" \
+            --aqua-key "${AQUA_KEY}" \
+            --aqua-secret "${AQUA_SECRET}" \
+            --cspm-url https://stage.api.cloudsploit.com \ 
+            --artifact-path target/*.jar \
+            --log-file billy.log \
+            --sbom-path sbom.json
+ #old https://api.cloudsploit.com
+ #         #   
+          #  
+      - name: Print Billy Log Output
+        if: always()
+        run: |
+          echo "--- billy.log ---"
+          cat billy.log || echo "No log file found"
