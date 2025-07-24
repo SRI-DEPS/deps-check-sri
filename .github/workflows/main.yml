@@ -46,15 +46,9 @@ jobs:
           BINDIR="." sh install.sh
           rm install.sh
 
-      - name: Billy Health Check
-        env:
-          AQUA_ACCESS_TOKEN: ${{ secrets.AQUA_ACCESS_TOKEN }}
-        run: |
-          ./billy health || true
-
       - name: Generate SBOM and Upload to Aqua
         env:
-          AQUA_ACCESS_TOKEN: ${{ secrets.AQUA_ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
           AQUA_KEY: ${{ secrets.AQUA_KEY }}
           AQUA_SECRET: ${{ secrets.AQUA_SECRET }}
           TRIVY_USERNAME: ${{ secrets.TRIVY_USERNAME }}
@@ -67,7 +61,7 @@ jobs:
           BILLY_SERVER: https://billy.codesec.aquasec.com
         run: |
           ./billy generate \
-            --access-token "$AQUA_ACCESS_TOKEN" \
+            --access-token "${{ secrets.TOKEN_GITHUB }}" \
             --aqua-key "$AQUA_KEY" \
             --aqua-secret "$AQUA_SECRET" \
             --cspm-url "$CSPM_URL" \
