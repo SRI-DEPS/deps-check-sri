@@ -86,6 +86,25 @@ jobs:
             --branch "${{ github.ref_name }}" \
             --build-id "${{ github.run_id }}"
 
+      - name: Generate Release Artifact Manifest for Aqua
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AQUA_KEY: ${{ secrets.AQUA_KEY }}
+          AQUA_SECRET: ${{ secrets.AQUA_SECRET }}
+          CSPM_URL: https://stage.api.cloudsploit.com
+          BILLY_SERVER: https://billy.dev-aqua.codesec.aquasec.com
+        run: |
+          ./billy generate \
+            --access-token "${{ secrets.GITHUB_TOKEN }}" \
+            --aqua-key "${{ secrets.AQUA_KEY }}" \
+            --aqua-secret "${{ secrets.AQUA_SECRET }}" \
+            --cspm-url "$CSPM_URL" \
+            --artifact-path "." \
+            --repository "https://github.com/SRI-DEPS/deps-check-sri" \
+            --commit "${{ github.sha }}" \
+            --branch "${{ github.ref_name }}" \
+            --build-id "${{ github.run_id }}"
+
       - name: Print Billy Log Output
         if: always()
         run: |
