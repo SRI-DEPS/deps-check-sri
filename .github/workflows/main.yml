@@ -45,8 +45,8 @@ jobs:
         env:
           TRIVY_USERNAME: ${{ secrets.TRIVY_USERNAME }}
           TRIVY_PASSWORD: ${{ secrets.TRIVY_PASSWORD }}
-          AQUA_KEY: ${{ secrets.AQUA_KEY }}
-          AQUA_SECRET: ${{ secrets.AQUA_SECRET }}
+          AQUA_KEY: d51uJG1ueFOfj2IAUaIxfS
+          AQUA_SECRET: FgkuTcRWRfSPLVjwrqNdSChVQJ1WkaBeETZ
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           AQUA_URL: https://api.dev.supply-chain.cloud.aquasec.com
           CSPM_URL: https://stage.api.cloudsploit.com
@@ -62,8 +62,8 @@ jobs:
       - name: Generate SBOM and Upload to Aqua (With Metadata)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          AQUA_KEY: ${{ secrets.AQUA_KEY }}
-          AQUA_SECRET: ${{ secrets.AQUA_SECRET }}
+          AQUA_KEY: d51uJG1ueFOfj2IAUaIxfS
+          AQUA_SECRET: FgkuTcRWRfSPLVjwrqNdSChVQJ1WkaBeETZ
           TRIVY_USERNAME: ${{ secrets.TRIVY_USERNAME }}
           TRIVY_PASSWORD: ${{ secrets.TRIVY_PASSWORD }}
           TRIVY_DB_REPOSITORY: "registry.aquasec.com/trivy-db:2"
@@ -75,8 +75,8 @@ jobs:
         run: |
           ./billy generate \
             --access-token "${{ secrets.GITHUB_TOKEN }}" \
-            --aqua-key "${{ secrets.AQUA_KEY }}" \
-            --aqua-secret "${{ secrets.AQUA_SECRET }}" \
+            --aqua-key d51uJG1ueFOfj2IAUaIxfS \
+            --aqua-secret FgkuTcRWRfSPLVjwrqNdSChVQJ1WkaBeETZ \
             --cspm-url "$CSPM_URL" \
             --artifact-path target/*.jar \
             --log-file billy.log \
@@ -89,15 +89,15 @@ jobs:
       - name: Generate Release Artifact Manifest for Aqua
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          AQUA_KEY: ${{ secrets.AQUA_KEY }}
-          AQUA_SECRET: ${{ secrets.AQUA_SECRET }}
+          AQUA_KEY: d51uJG1ueFOfj2IAUaIxfS
+          AQUA_SECRET: FgkuTcRWRfSPLVjwrqNdSChVQJ1WkaBeETZ
           CSPM_URL: https://stage.api.cloudsploit.com
           BILLY_SERVER: https://billy.dev-aqua.codesec.aquasec.com
         run: |
           ./billy local \
             --access-token "${{ secrets.GITHUB_TOKEN }}" \
-            --aqua-key "${{ secrets.AQUA_KEY }}" \
-            --aqua-secret "${{ secrets.AQUA_SECRET }}" \
+            --aqua-key d51uJG1ueFOfj2IAUaIxfS" \
+            --aqua-secret FgkuTcRWRfSPLVjwrqNdSChVQJ1WkaBeETZ \
             --cspm-url "$CSPM_URL" \
             --artifact-path "." \
             --repository "https://github.com/SRI-DEPS/deps-check-sri" \
