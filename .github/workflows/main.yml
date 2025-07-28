@@ -96,7 +96,7 @@ jobs:
         run: |
           ./billy local \
             --access-token "${{ secrets.GITHUB_TOKEN }}" \
-            --aqua-key d51uJG1ueFOfj2IAUaIxfS" \
+            --aqua-key d51uJG1ueFOfj2IAUaIxfS \
             --aqua-secret FgkuTcRWRfSPLVjwrqNdSChVQJ1WkaBeETZ \
             --cspm-url "$CSPM_URL" \
             --artifact-path "." \
